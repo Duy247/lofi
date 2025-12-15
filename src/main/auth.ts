@@ -17,7 +17,7 @@ let onTokenRetrieved: (data: AuthData) => void = null;
 
 const AUTH_URL = 'https://accounts.spotify.com/authorize';
 const AUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token';
-const AUTH_CLIENT_ID = '69eca11b9ccd4bd3a7e01e6f9ddb5205';
+const AUTH_CLIENT_ID = '8a501eb93a49490589ee2ca4a25615f5';
 const AUTH_PORT = 41419;
 const AUTH_SCOPES = [
   'user-read-playback-state',
