@@ -1,20 +1,24 @@
-name: build-windows-setup
+name: release-latest
 
 on:
-  workflow_dispatch:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 16
@@ -23,11 +27,20 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build Windows setup executable
-        run: yarn dist -- --publish never
+      - name: Build
+        run: yarn build
 
-      - name: Upload Windows setup artifact
-        uses: actions/upload-artifact@v4
+      - name: Build & Publish (Latest)
+        uses: softprops/action-gh-release@v2
         with:
-          name: lofi-windows-setup
-          path: dist/*.exe
+          tag_name: latest
+          name: Latest Build
+          prerelease: false
+          draft: false
+          files: |
+            dist/**/*.exe
+            dist/**/*.dmg
+            dist/**/*.AppImage
+            dist/**/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
