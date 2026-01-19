@@ -1,8 +1,12 @@
 name: release
-on: [workflow_dispatch]
+
+on:
+  workflow_dispatch:
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -16,11 +20,17 @@ jobs:
         with:
           node-version: 16
 
-      - run: pip install packaging
+      - name: Install packaging (Python)
+        run: pip install packaging
 
-      - run: yarn install
-      - run: yarn build
-      - run: yarn production
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Production build
+        run: yarn production
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
